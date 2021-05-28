@@ -12,6 +12,7 @@ except ImportError:
 import numpy as np
 import scipy.sparse as sp
 import numbers
+import gc
 
 from .glove_cython import fit_vectors, transform_paragraph
 
@@ -38,9 +39,10 @@ class Glove(object):
     corpus coocurrence matrix.
     """
 
-    def __init__(self, no_components=30, learning_rate=0.05,
+    def __init__(self, dictionary: dict, no_components=30, learning_rate=0.05,
                  alpha=0.75, max_count=100, max_loss=10.0,
-                 random_state=None):
+                 random_state=None,
+                 pretrained: str=None):
         """
         Parameters:
         - int no_components: number of latent dimensions
@@ -55,6 +57,7 @@ class Glove(object):
         - random_state: random statue used to intialize optimization
         """
 
+        num_vocab = len(dictionary)
         self.no_components = no_components
         self.learning_rate = float(learning_rate)
         self.alpha = float(alpha)
@@ -71,6 +74,39 @@ class Glove(object):
         self.inverse_dictionary = None
 
         self.random_state = random_state
+        
+        # initialize weights
+        random_state = check_random_state(self.random_state)
+        
+        self.word_vectors = ((random_state.rand(num_vocab,
+                                                self.no_components) - 0.5)
+                             / self.no_components)
+        self.word_biases = np.zeros(num_vocab,
+                                    dtype=np.float64)
+
+        self.vectors_sum_gradients = np.ones_like(self.word_vectors)
+        self.biases_sum_gradients = np.ones_like(self.word_biases)
+        
+        # dictionary, words_to_ids
+        print("add dictionary")
+        self.dictionary = self.__add_dictionary(dictionary)
+        
+        # load pre-trained model
+        if pretrained:
+            print(f"Loading pretrained from {pretrained}")
+            word2emb_pretrained = load_glove(pretrained)
+            
+            print("Updating old vectors with pre-trained vectors")
+            for word in self.dictionary:
+                idx = self.dictionary[word]
+                self.word_vectors[idx, :] = word2emb_pretrained[word]
+            
+            print("Del the loaded pre-trained vectors")
+            del word2emb_pretrained
+            gc.collect()
+        else:
+            print(f"Train Glove model from scratch")
+            
 
     def fit(self, matrix, epochs=5, no_threads=2, verbose=False):
         """
@@ -91,17 +127,8 @@ class Glove(object):
 
         if not sp.isspmatrix_coo(matrix):
             raise Exception('Coocurrence matrix must be in the COO format')
-
+        
         random_state = check_random_state(self.random_state)
-        self.word_vectors = ((random_state.rand(shape[0],
-                                                self.no_components) - 0.5)
-                             / self.no_components)
-        self.word_biases = np.zeros(shape[0],
-                                    dtype=np.float64)
-
-        self.vectors_sum_gradients = np.ones_like(self.word_vectors)
-        self.biases_sum_gradients = np.ones_like(self.word_biases)
-
         shuffle_indices = np.arange(matrix.nnz, dtype=np.int32)
 
         if verbose:
@@ -187,7 +214,7 @@ class Glove(object):
 
         return paragraph_vector
 
-    def add_dictionary(self, dictionary):
+    def __add_dictionary(self, dictionary):
         """
         Supply a word-id dictionary to allow similarity queries.
         """
@@ -307,3 +334,15 @@ class Glove(object):
         paragraph_vector = self.transform_paragraph(paragraph, **kwargs)
 
         return self._similarity_query(paragraph_vector, number)
+
+
+def load_glove(pretrained_path: str) -> dict:
+    word2embedding = dict()
+    with open(pretrained_path, 'rb') as file:
+        for line in file:
+            line = line.decode().split()
+            word = line[0]
+            vect = np.array(line[1:]).astype(np.float)
+            word2embedding[word] = vect   
+    
+    return word2embedding 
