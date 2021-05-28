@@ -228,7 +228,7 @@ def construct_cooccurrence_matrix(corpus, dictionary, int supplied,
 
     # String processing variables.
     cdef list words
-    cdef int i, j, outer_word, inner_word, count_corpus
+    cdef int i, j, outer_word, inner_word, count_corpus, max_corpus
     cdef int wordslen, window_stop, error
     cdef vector[int] word_ids
 
@@ -238,6 +238,7 @@ def construct_cooccurrence_matrix(corpus, dictionary, int supplied,
 
     # Iterate over the corpus.
     count_corpus = 0
+    max_corpus = 0
     for words in corpus:
         # Convert words to a numeric vector.
         error = words_to_ids(words, word_ids, dictionary,
@@ -278,6 +279,8 @@ def construct_cooccurrence_matrix(corpus, dictionary, int supplied,
                                      inner_word,
                                      1.0 / (j - i))
         count_corpus += 1
+        if count_corpus == max_corpus:
+            break
         print(f"Total corpus: {count_corpus}")
     # Create the matrix.
     print("Create the matrix...")

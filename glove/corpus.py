@@ -20,11 +20,12 @@ class Corpus(object):
     from the corpus.
     """
 
-    def __init__(self, dictionary=None):
+    def __init__(self, dictionary=None, max_corpus: int=100000):
 
         self.dictionary = {}
         self.dictionary_supplied = False
         self.matrix = None
+        self.max_corpus = max_corpus
 
         if dictionary is not None:
             self._check_dict(dictionary)
@@ -61,7 +62,8 @@ class Corpus(object):
                                                     self.dictionary,
                                                     int(self.dictionary_supplied),
                                                     int(window),
-                                                    int(ignore_missing))
+                                                    int(ignore_missing),
+                                                    self.max_corpus)
 
     def save(self, filename):
 
