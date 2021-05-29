@@ -3,6 +3,7 @@
 import array
 import collections
 import io
+import joblib
 try:
     # Python 2 compat
     import cPickle as pickle
@@ -39,7 +40,7 @@ class Glove(object):
     corpus coocurrence matrix.
     """
 
-    def __init__(self, dictionary: dict, no_components=30, learning_rate=0.05,
+    def __init__(self, dictionary: dict=None, no_components=30, learning_rate=0.05,
                  alpha=0.75, max_count=100, max_loss=10.0,
                  random_state=None,
                  pretrained: str=None):
@@ -56,8 +57,9 @@ class Glove(object):
                           stability.
         - random_state: random statue used to intialize optimization
         """
-
-        num_vocab = len(dictionary)
+        
+        if not dictionary == None:
+            num_vocab = len(dictionary)
         self.no_components = no_components
         self.learning_rate = float(learning_rate)
         self.alpha = float(alpha)
@@ -70,42 +72,39 @@ class Glove(object):
         self.vectors_sum_gradients = None
         self.biases_sum_gradients = None
 
-        self.dictionary = None
-        self.inverse_dictionary = None
-
         self.random_state = random_state
         
         # initialize weights
         random_state = check_random_state(self.random_state)
         
-        self.word_vectors = ((random_state.rand(num_vocab,
-                                                self.no_components) - 0.5)
-                             / self.no_components)
-        self.word_biases = np.zeros(num_vocab,
-                                    dtype=np.float64)
+        if not dictionary == None:
+            print("Initialize word vectors")
+            self.word_vectors = ((random_state.rand(num_vocab,
+                                                    self.no_components) - 0.5)
+                                / self.no_components)
 
-        self.vectors_sum_gradients = np.ones_like(self.word_vectors)
-        self.biases_sum_gradients = np.ones_like(self.word_biases)
+        if not dictionary == None:
+            print("Initialize word bias")
+            self.word_biases = np.zeros(num_vocab,
+                                        dtype=np.float64)
+
+        if not dictionary == None:        
+            print("Initialize gradients")
+            self.vectors_sum_gradients = np.ones_like(self.word_vectors)
+            self.biases_sum_gradients = np.ones_like(self.word_biases)
         
         # dictionary, words_to_ids
-        print("add dictionary")
-        self.dictionary = self.__add_dictionary(dictionary)
+        if not dictionary == None:
+            print("add dictionary")
+            self.__add_dictionary(dictionary)
         
         # load pre-trained model
-        if pretrained:
-            print(f"Loading pretrained from {pretrained}")
-            word2emb_pretrained = load_glove(pretrained)
-            
-            print("Updating old vectors with pre-trained vectors")
-            for word in self.dictionary:
-                idx = self.dictionary[word]
-                self.word_vectors[idx, :] = word2emb_pretrained[word]
-            
-            print("Del the loaded pre-trained vectors")
-            del word2emb_pretrained
-            gc.collect()
-        else:
-            print(f"Train Glove model from scratch")
+        if not dictionary == None:
+            if pretrained:
+                print(f"Loading pretrained from {pretrained}")
+                self.load_glove(pretrained)
+            else:
+                print(f"Train Glove model from scratch")
             
 
     def fit(self, matrix, epochs=5, no_threads=2, verbose=False):
@@ -218,7 +217,6 @@ class Glove(object):
         """
         Supply a word-id dictionary to allow similarity queries.
         """
-
         if self.word_vectors is None:
             raise Exception('Model must be fit before adding a dictionary')
 
@@ -232,18 +230,24 @@ class Glove(object):
             items_iterator = self.dictionary.iteritems()
         else:
             items_iterator = self.dictionary.items()
-
+        
         self.inverse_dictionary = {v: k for k, v in items_iterator}
 
     def save(self, filename):
         """
         Serialize model to filename.
         """
-
-        with open(filename, 'wb') as savefile:
-            pickle.dump(self.__dict__,
-                        savefile,
-                        protocol=pickle.HIGHEST_PROTOCOL)
+        import gc
+        gc.collect()
+        joblib.dump(self.__dict__,
+                    filename)   
+    
+    def save_joblib(self, filename):
+        import gc
+        
+        gc.collect()
+        joblib.dump(self.__dict__,
+                    filename)    
 
     @classmethod
     def load(cls, filename):
@@ -252,9 +256,12 @@ class Glove(object):
         """
 
         instance = Glove()
-
-        with open(filename, 'rb') as savefile:
-            instance.__dict__ = pickle.load(savefile)
+        instance.__dict__ = joblib.load(filename)
+        instance.word_vectors = instance.__dict__['word_vectors']
+        instance.dictionary = instance.__dict__['dictionary']
+        instance.inverse_dictionary = instance.__dict__['inverse_dictionary']
+        instance.no_components = instance.__dict__['no_components']
+        instance.learning_rate = instance.__dict__['learning_rate'] 
 
         return instance
 
@@ -336,13 +343,28 @@ class Glove(object):
         return self._similarity_query(paragraph_vector, number)
 
 
-def load_glove(pretrained_path: str) -> dict:
-    word2embedding = dict()
-    with open(pretrained_path, 'rb') as file:
-        for line in file:
-            line = line.decode().split()
-            word = line[0]
-            vect = np.array(line[1:]).astype(np.float)
-            word2embedding[word] = vect   
-    
-    return word2embedding 
+    def load_glove(self, pretrained_path: str) -> dict:
+        print("Updating old vectors with pre-trained vectors")
+        count_replacements = 0
+        count_not_replacements = 0
+        with open(pretrained_path, 'rb') as file:
+            for line in file:
+                line = line.decode().split()
+                word = line[0]
+                if word in self.dictionary:
+                    vec = line[1:]
+                    len_vec = len(vec)
+                    if len_vec > self.no_components:
+                        dif = len_vec - self.no_components
+                        vect = np.array(vec[dif:]).astype(np.float)    
+                    else:
+                        vect = np.array(vec).astype(np.float)
+                    
+                    idx = self.dictionary[word]
+                    self.word_vectors[idx, :] = vect
+                    count_replacements+=1
+                else:
+                    count_not_replacements+=1
+        
+        print(f"Vocab with pretrained: {count_replacements}")
+        print(f"Vocab with random: {count_not_replacements}")

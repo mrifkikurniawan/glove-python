@@ -215,7 +215,7 @@ cdef int words_to_ids(list words, vector[int]& word_ids,
 
 
 def construct_cooccurrence_matrix(corpus, dictionary, int supplied,
-                                  int window_size, int ignore_missing):
+                                  int window_size, int ignore_missing, int max_corpus):
     """
     Construct the word-id dictionary and cooccurrence matrix for
     a given corpus, using a given window size.
@@ -228,7 +228,7 @@ def construct_cooccurrence_matrix(corpus, dictionary, int supplied,
 
     # String processing variables.
     cdef list words
-    cdef int i, j, outer_word, inner_word, count_corpus, max_corpus
+    cdef int i, j, outer_word, inner_word, count_corpus
     cdef int wordslen, window_stop, error
     cdef vector[int] word_ids
 
@@ -238,7 +238,6 @@ def construct_cooccurrence_matrix(corpus, dictionary, int supplied,
 
     # Iterate over the corpus.
     count_corpus = 0
-    max_corpus = 0
     for words in corpus:
         # Convert words to a numeric vector.
         error = words_to_ids(words, word_ids, dictionary,

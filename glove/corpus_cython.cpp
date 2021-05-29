@@ -1947,6 +1947,7 @@ static const char __pyx_k_ValueError[] = "ValueError";
 static const char __pyx_k_coo_matrix[] = "coo_matrix";
 static const char __pyx_k_dictionary[] = "dictionary";
 static const char __pyx_k_inner_word[] = "inner_word";
+static const char __pyx_k_max_corpus[] = "max_corpus";
 static const char __pyx_k_outer_word[] = "outer_word";
 static const char __pyx_k_pyx_result[] = "__pyx_result";
 static const char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
@@ -2071,6 +2072,7 @@ static PyObject *__pyx_n_s_j;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_mat;
 static PyObject *__pyx_n_s_matrix;
+static PyObject *__pyx_n_s_max_corpus;
 static PyObject *__pyx_n_s_memview;
 static PyObject *__pyx_n_s_mode;
 static PyObject *__pyx_n_s_name;
@@ -2123,7 +2125,7 @@ static PyObject *__pyx_n_s_window_stop;
 static PyObject *__pyx_n_s_word_ids;
 static PyObject *__pyx_n_s_words;
 static PyObject *__pyx_n_s_wordslen;
-static PyObject *__pyx_pf_5glove_13corpus_cython_construct_cooccurrence_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_corpus, PyObject *__pyx_v_dictionary, int __pyx_v_supplied, int __pyx_v_window_size, int __pyx_v_ignore_missing); /* proto */
+static PyObject *__pyx_pf_5glove_13corpus_cython_construct_cooccurrence_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_corpus, PyObject *__pyx_v_dictionary, int __pyx_v_supplied, int __pyx_v_window_size, int __pyx_v_ignore_missing, int __pyx_v_max_corpus); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(struct __pyx_array_obj *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_array___pyx_pf_15View_dot_MemoryView_5array_4__dealloc__(struct __pyx_array_obj *__pyx_v_self); /* proto */
@@ -3808,7 +3810,7 @@ static int __pyx_f_5glove_13corpus_cython_words_to_ids(PyObject *__pyx_v_words, 
  * 
  * 
  * def construct_cooccurrence_matrix(corpus, dictionary, int supplied,             # <<<<<<<<<<<<<<
- *                                   int window_size, int ignore_missing):
+ *                                   int window_size, int ignore_missing, int max_corpus):
  *     """
  */
 
@@ -3822,6 +3824,7 @@ static PyObject *__pyx_pw_5glove_13corpus_cython_1construct_cooccurrence_matrix(
   int __pyx_v_supplied;
   int __pyx_v_window_size;
   int __pyx_v_ignore_missing;
+  int __pyx_v_max_corpus;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -3829,12 +3832,14 @@ static PyObject *__pyx_pw_5glove_13corpus_cython_1construct_cooccurrence_matrix(
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("construct_cooccurrence_matrix (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_corpus,&__pyx_n_s_dictionary,&__pyx_n_s_supplied,&__pyx_n_s_window_size,&__pyx_n_s_ignore_missing,0};
-    PyObject* values[5] = {0,0,0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_corpus,&__pyx_n_s_dictionary,&__pyx_n_s_supplied,&__pyx_n_s_window_size,&__pyx_n_s_ignore_missing,&__pyx_n_s_max_corpus,0};
+    PyObject* values[6] = {0,0,0,0,0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+        CYTHON_FALLTHROUGH;
         case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
         CYTHON_FALLTHROUGH;
         case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
@@ -3857,31 +3862,37 @@ static PyObject *__pyx_pw_5glove_13corpus_cython_1construct_cooccurrence_matrix(
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dictionary)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 5, 5, 1); __PYX_ERR(0, 217, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 6, 6, 1); __PYX_ERR(0, 217, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_supplied)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 5, 5, 2); __PYX_ERR(0, 217, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 6, 6, 2); __PYX_ERR(0, 217, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_window_size)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 5, 5, 3); __PYX_ERR(0, 217, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 6, 6, 3); __PYX_ERR(0, 217, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_ignore_missing)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 5, 5, 4); __PYX_ERR(0, 217, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 6, 6, 4); __PYX_ERR(0, 217, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  5:
+        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_max_corpus)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 6, 6, 5); __PYX_ERR(0, 217, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "construct_cooccurrence_matrix") < 0)) __PYX_ERR(0, 217, __pyx_L3_error)
       }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 6) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
@@ -3889,29 +3900,31 @@ static PyObject *__pyx_pw_5glove_13corpus_cython_1construct_cooccurrence_matrix(
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
       values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
       values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+      values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
     }
     __pyx_v_corpus = values[0];
     __pyx_v_dictionary = values[1];
     __pyx_v_supplied = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_supplied == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 217, __pyx_L3_error)
     __pyx_v_window_size = __Pyx_PyInt_As_int(values[3]); if (unlikely((__pyx_v_window_size == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 218, __pyx_L3_error)
     __pyx_v_ignore_missing = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_ignore_missing == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 218, __pyx_L3_error)
+    __pyx_v_max_corpus = __Pyx_PyInt_As_int(values[5]); if (unlikely((__pyx_v_max_corpus == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 218, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 217, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 217, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("glove.corpus_cython.construct_cooccurrence_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_5glove_13corpus_cython_construct_cooccurrence_matrix(__pyx_self, __pyx_v_corpus, __pyx_v_dictionary, __pyx_v_supplied, __pyx_v_window_size, __pyx_v_ignore_missing);
+  __pyx_r = __pyx_pf_5glove_13corpus_cython_construct_cooccurrence_matrix(__pyx_self, __pyx_v_corpus, __pyx_v_dictionary, __pyx_v_supplied, __pyx_v_window_size, __pyx_v_ignore_missing, __pyx_v_max_corpus);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5glove_13corpus_cython_construct_cooccurrence_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_corpus, PyObject *__pyx_v_dictionary, int __pyx_v_supplied, int __pyx_v_window_size, int __pyx_v_ignore_missing) {
+static PyObject *__pyx_pf_5glove_13corpus_cython_construct_cooccurrence_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_corpus, PyObject *__pyx_v_dictionary, int __pyx_v_supplied, int __pyx_v_window_size, int __pyx_v_ignore_missing, int __pyx_v_max_corpus) {
   struct __pyx_t_5glove_13corpus_cython_SparseRowMatrix *__pyx_v_matrix;
   PyObject *__pyx_v_words = 0;
   int __pyx_v_i;
@@ -4248,7 +4261,7 @@ static PyObject *__pyx_pf_5glove_13corpus_cython_construct_cooccurrence_matrix(C
  *                                      inner_word,
  *                                      1.0 / (j - i))             # <<<<<<<<<<<<<<
  *         count_corpus += 1
- *         print(f"Total corpus: {count_corpus}")
+ *         if count_corpus == max_corpus:
  */
           __pyx_f_5glove_13corpus_cython_increment_matrix(__pyx_v_matrix, __pyx_v_outer_word, __pyx_v_inner_word, (1.0 / (__pyx_v_j - __pyx_v_i)));
         }
@@ -4262,24 +4275,52 @@ static PyObject *__pyx_pf_5glove_13corpus_cython_construct_cooccurrence_matrix(C
  *                                      inner_word,
  *                                      1.0 / (j - i))
  *         count_corpus += 1             # <<<<<<<<<<<<<<
- *         print(f"Total corpus: {count_corpus}")
- *     # Create the matrix.
+ *         if count_corpus == max_corpus:
+ *             break
  */
     __pyx_v_count_corpus = (__pyx_v_count_corpus + 1);
 
     /* "glove/corpus_cython.pyx":281
  *                                      1.0 / (j - i))
  *         count_corpus += 1
+ *         if count_corpus == max_corpus:             # <<<<<<<<<<<<<<
+ *             break
+ *         print(f"Total corpus: {count_corpus}")
+ */
+    __pyx_t_5 = ((__pyx_v_count_corpus == __pyx_v_max_corpus) != 0);
+    if (__pyx_t_5) {
+
+      /* "glove/corpus_cython.pyx":282
+ *         count_corpus += 1
+ *         if count_corpus == max_corpus:
+ *             break             # <<<<<<<<<<<<<<
+ *         print(f"Total corpus: {count_corpus}")
+ *     # Create the matrix.
+ */
+      goto __pyx_L4_break;
+
+      /* "glove/corpus_cython.pyx":281
+ *                                      1.0 / (j - i))
+ *         count_corpus += 1
+ *         if count_corpus == max_corpus:             # <<<<<<<<<<<<<<
+ *             break
+ *         print(f"Total corpus: {count_corpus}")
+ */
+    }
+
+    /* "glove/corpus_cython.pyx":283
+ *         if count_corpus == max_corpus:
+ *             break
  *         print(f"Total corpus: {count_corpus}")             # <<<<<<<<<<<<<<
  *     # Create the matrix.
  *     print("Create the matrix...")
  */
-    __pyx_t_4 = __Pyx_PyUnicode_From_int(__pyx_v_count_corpus, 0, ' ', 'd'); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 281, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyUnicode_From_int(__pyx_v_count_corpus, 0, ' ', 'd'); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 283, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_12 = __Pyx_PyUnicode_Concat(__pyx_kp_u_Total_corpus, __pyx_t_4); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 281, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyUnicode_Concat(__pyx_kp_u_Total_corpus, __pyx_t_4); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 283, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (__Pyx_PrintOne(0, __pyx_t_12) < 0) __PYX_ERR(0, 281, __pyx_L1_error)
+    if (__Pyx_PrintOne(0, __pyx_t_12) < 0) __PYX_ERR(0, 283, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
     /* "glove/corpus_cython.pyx":241
@@ -4290,31 +4331,32 @@ static PyObject *__pyx_pf_5glove_13corpus_cython_construct_cooccurrence_matrix(C
  *         error = words_to_ids(words, word_ids, dictionary,
  */
   }
+  __pyx_L4_break:;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "glove/corpus_cython.pyx":283
+  /* "glove/corpus_cython.pyx":285
  *         print(f"Total corpus: {count_corpus}")
  *     # Create the matrix.
  *     print("Create the matrix...")             # <<<<<<<<<<<<<<
  *     mat = matrix_to_coo(matrix, len(dictionary))
  *     free_matrix(matrix)
  */
-  if (__Pyx_PrintOne(0, __pyx_kp_s_Create_the_matrix) < 0) __PYX_ERR(0, 283, __pyx_L1_error)
+  if (__Pyx_PrintOne(0, __pyx_kp_s_Create_the_matrix) < 0) __PYX_ERR(0, 285, __pyx_L1_error)
 
-  /* "glove/corpus_cython.pyx":284
+  /* "glove/corpus_cython.pyx":286
  *     # Create the matrix.
  *     print("Create the matrix...")
  *     mat = matrix_to_coo(matrix, len(dictionary))             # <<<<<<<<<<<<<<
  *     free_matrix(matrix)
  * 
  */
-  __pyx_t_2 = PyObject_Length(__pyx_v_dictionary); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 284, __pyx_L1_error)
-  __pyx_t_1 = __pyx_f_5glove_13corpus_cython_matrix_to_coo(__pyx_v_matrix, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 284, __pyx_L1_error)
+  __pyx_t_2 = PyObject_Length(__pyx_v_dictionary); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 286, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_5glove_13corpus_cython_matrix_to_coo(__pyx_v_matrix, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 286, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_mat = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "glove/corpus_cython.pyx":285
+  /* "glove/corpus_cython.pyx":287
  *     print("Create the matrix...")
  *     mat = matrix_to_coo(matrix, len(dictionary))
  *     free_matrix(matrix)             # <<<<<<<<<<<<<<
@@ -4323,7 +4365,7 @@ static PyObject *__pyx_pf_5glove_13corpus_cython_construct_cooccurrence_matrix(C
  */
   __pyx_f_5glove_13corpus_cython_free_matrix(__pyx_v_matrix);
 
-  /* "glove/corpus_cython.pyx":287
+  /* "glove/corpus_cython.pyx":289
  *     free_matrix(matrix)
  * 
  *     return mat             # <<<<<<<<<<<<<<
@@ -4337,7 +4379,7 @@ static PyObject *__pyx_pf_5glove_13corpus_cython_construct_cooccurrence_matrix(C
  * 
  * 
  * def construct_cooccurrence_matrix(corpus, dictionary, int supplied,             # <<<<<<<<<<<<<<
- *                                   int window_size, int ignore_missing):
+ *                                   int window_size, int ignore_missing, int max_corpus):
  *     """
  */
 
@@ -18207,6 +18249,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_mat, __pyx_k_mat, sizeof(__pyx_k_mat), 0, 0, 1, 1},
   {&__pyx_n_s_matrix, __pyx_k_matrix, sizeof(__pyx_k_matrix), 0, 0, 1, 1},
+  {&__pyx_n_s_max_corpus, __pyx_k_max_corpus, sizeof(__pyx_k_max_corpus), 0, 0, 1, 1},
   {&__pyx_n_s_memview, __pyx_k_memview, sizeof(__pyx_k_memview), 0, 0, 1, 1},
   {&__pyx_n_s_mode, __pyx_k_mode, sizeof(__pyx_k_mode), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
@@ -18487,13 +18530,13 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  * def construct_cooccurrence_matrix(corpus, dictionary, int supplied,             # <<<<<<<<<<<<<<
- *                                   int window_size, int ignore_missing):
+ *                                   int window_size, int ignore_missing, int max_corpus):
  *     """
  */
-  __pyx_tuple__21 = PyTuple_Pack(17, __pyx_n_s_corpus, __pyx_n_s_dictionary, __pyx_n_s_supplied, __pyx_n_s_window_size, __pyx_n_s_ignore_missing, __pyx_n_s_matrix, __pyx_n_s_words, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_outer_word, __pyx_n_s_inner_word, __pyx_n_s_count_corpus, __pyx_n_s_wordslen, __pyx_n_s_window_stop, __pyx_n_s_error, __pyx_n_s_word_ids, __pyx_n_s_mat); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 217, __pyx_L1_error)
+  __pyx_tuple__21 = PyTuple_Pack(18, __pyx_n_s_corpus, __pyx_n_s_dictionary, __pyx_n_s_supplied, __pyx_n_s_window_size, __pyx_n_s_ignore_missing, __pyx_n_s_max_corpus, __pyx_n_s_matrix, __pyx_n_s_words, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_outer_word, __pyx_n_s_inner_word, __pyx_n_s_count_corpus, __pyx_n_s_wordslen, __pyx_n_s_window_stop, __pyx_n_s_error, __pyx_n_s_word_ids, __pyx_n_s_mat); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 217, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__21);
   __Pyx_GIVEREF(__pyx_tuple__21);
-  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(5, 0, 17, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_glove_corpus_cython_pyx, __pyx_n_s_construct_cooccurrence_matrix, 217, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 217, __pyx_L1_error)
+  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(6, 0, 18, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_glove_corpus_cython_pyx, __pyx_n_s_construct_cooccurrence_matrix, 217, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 217, __pyx_L1_error)
 
   /* "View.MemoryView":286
  *         return self.name
@@ -18941,7 +18984,7 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  * def construct_cooccurrence_matrix(corpus, dictionary, int supplied,             # <<<<<<<<<<<<<<
- *                                   int window_size, int ignore_missing):
+ *                                   int window_size, int ignore_missing, int max_corpus):
  *     """
  */
   __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_5glove_13corpus_cython_1construct_cooccurrence_matrix, NULL, __pyx_n_s_glove_corpus_cython); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 217, __pyx_L1_error)
